@@ -3,14 +3,33 @@ import { auth } from "../Firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Button } from "@mui/material";
 import { Box } from "@mui/material";
-import { Typography } from "@mui/material";
+import {
+  Typography,
+  InputLabel,
+  FormControl,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { TextField } from "@mui/material";
+import { firestore } from "../Firebase";
+import {
+  collection,
+  setDoc,
+  addDoc,
+  getDoc,
+  doc,
+  getDocs,
+} from "firebase/firestore";
+import { redirect, useNavigate, Navigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState("");
+
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -22,13 +41,29 @@ const Login = () => {
         password
       );
       const user = loginInformation.user;
-      setEmail("");
-      setPassword("");
+
+      if (!role) {
+        setError("Please fill in all fields");
+        return;
+      }
+
+      const userDocRef = doc(firestore, "users", user.uid);
+      await setDoc(userDocRef, {
+        email: user.email,
+        role: role,
+      });
     } catch (errored) {
       let errorMessage = errored.message;
       setError(errorMessage);
     } finally {
       setLoading(false);
+      if (role == "Student") {
+        navigate("/student");
+      }
+
+      if (role == "Teaching Assistant") {
+        navigate("/ta");
+      }
     }
   };
 
@@ -78,6 +113,24 @@ const Login = () => {
             >
               Sign Up{" "}
             </Typography>
+            <FormControl
+              sx={{ width: "55%", height: "25%", m: 0 }}
+              margin="normal"
+            >
+              <InputLabel id="categorization-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                label="Categorization"
+              >
+                <MenuItem value="Student">Student</MenuItem>
+                <MenuItem value="Teaching Assistant">
+                  Teaching Assistant
+                </MenuItem>
+              </Select>
+            </FormControl>
             {error && <div className="error">{error}</div>}
             <TextField
               label="Email address:"
@@ -96,6 +149,9 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               disabled={loading}
+              size="small"
+              rows={4}
+              margin="normal"
               variant="outlined"
             />
             <Button
@@ -109,6 +165,7 @@ const Login = () => {
                 },
               }}
               disabled={loading}
+              onClick={handleSubmit}
             >
               {loading ? "Signing In..." : "Sign In"}
             </Button>
