@@ -1,15 +1,41 @@
 import { useState } from "react";
+import { auth } from "./FirebaseConfig"
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
+//I've rewritten this garbage 8 times already why is this so hard 
+//?????????
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { login, error, isLoading } = useLogin();
-
+  const [errorOne, errorTwo] = useState("");
+  const {load, loading} = useState(false);
   const handleSubmit = async (e) => {
+    await Login(email,password);
     e.preventDefault();
+    loading(true);
+    errorOne("");
+    try {
+        const loginInformation = await createUserWithEmailAndPassword(auth,email,password);
+        console.log("You can connect");
+    }
+    catch {
+      errorTwo("");
+    }
+    finally{
+        loading(false);
+    }
+    };
+    //const email = e.target.email.value;
+    //const password = e.target.password.value;
+    //createUserWithEmailAndPassword(database,email,password).then(data=>{
+        //console.log.add(data, "authdata")
+//})
+}
 
-    // await login(email, password);
-  };
+    //try{
+      //await login(email, password);
+    //}
+  //};
 
   return (
     <form className="login" onSubmit={handleSubmit}>
@@ -32,6 +58,4 @@ const Login = () => {
 
     </form>
   );
-};
-
 export default Login;
