@@ -1,54 +1,190 @@
-import { Box, Stack, Typography, Button, Snackbar, Modal, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
-import { useState } from 'react';
+"use client";
+import {
+  Box,
+  Stack,
+  Typography,
+  Button,
+  Snackbar,
+  Modal,
+  TextField,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+import { useState, useEffect } from "react";
+import { firestore } from "../Firebase";
+import {
+  collection,
+  setDoc,
+  addDoc,
+  getDoc,
+  doc,
+  query,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
+import { CircularProgress } from "@mui/material";
 
 export default function QueueManager() {
   const [queue, setQueue] = useState([]);
-  const [newItem, setNewItem] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [questions, setQuestions] = useState("");
+  const [post, setPost] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Modal state
   const [openModal, setOpenModal] = useState(false);
-  const [name, setName] = useState('');
-  const [ubit, setUbit] = useState('');
-  const [category, setCategory] = useState('');
-  const [question, setQuestion] = useState(''); // State for the question input
+  const [openModal2, setOpenModal2] = useState(false);
+  const [name, setName] = useState("");
+  const [ubit, setUbit] = useState("");
+  const [category, setCategory] = useState("");
+  const [question, setQuestion] = useState("");
 
-  const enqueueItem = () => {
-    if (!name || !ubit || !category || !question) {
-      setError('Please fill in all fields');
+  // Fetch queue data on component mount
+  useEffect(() => {
+    updateQueue();
+    updateQuestions();
+  }, []);
+
+  const updateQueue = async () => {
+    setLoading(true);
+    try {
+      const snapshot = query(collection(firestore, "students"));
+      const docs = await getDocs(snapshot);
+      const queueList = [];
+      docs.forEach((doc) => {
+        queueList.push({ id: doc.id, ...doc.data() });
+      });
+      setQueue(queueList);
+    } catch (error) {
+      console.error("Error updating queue: ", error);
+      setError("Failed to update queue");
       setOpenSnackbar(true);
-      return;
+    } finally {
+      setLoading(false);
     }
-    const item = { name, ubit, category, question }; // Include question in the item
-    setQueue([...queue, item]);
-    setOpenModal(false); // Close modal after adding to queue
-    setName('');
-    setUbit('');
-    setCategory('');
-    setQuestion(''); // Reset question input
+  };
+  const updateQuestions = async () => {
+    setLoading(true);
+    try {
+      const snapshot = query(collection(firestore, "questions"));
+      const docs = await getDocs(snapshot);
+      const questionsList = [];
+      docs.forEach((doc) => {
+        questionsList.push({ id: doc.id, ...doc.data() });
+      });
+      setQuestions(questionsList);
+    } catch (error) {
+      console.error("Error updating questions: ", error);
+      setError("Failed to update questions");
+      setOpenSnackbar(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const dequeueItem = () => {
-    if (queue.length === 0) {
-      setError('Queue is empty');
+  const addToQuestions = async () => {
+    if (!post) {
+      setError("Please fill in question.");
       setOpenSnackbar(true);
       return;
     }
-    setQueue(queue.slice(1)); // Remove the first item
+
+    try {
+      const standardizedUbit = ubit;
+      await addDoc(collection(firestore, "questions"), {
+        post,
+        ubit: standardizedUbit,
+      });
+      await updateQuestions();
+      setOpenModal2(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error adding question: ", error);
+      setError("Failed to add question");
+      setOpenSnackbar(true);
+    }
+  };
+
+  const addToQueue = async () => {
+    if (!name || !question || !category || !ubit) {
+      setError("Please fill in all fields");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    try {
+      const standardizedUbit = ubit;
+      const docRef = doc(collection(firestore, "students"), standardizedUbit);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setError("Student with this UBIT already exists");
+        setOpenSnackbar(true);
+        return;
+      }
+
+      await setDoc(docRef, {
+        name,
+        question,
+        category,
+        ubit: standardizedUbit,
+      });
+
+      await updateQueue();
+      setOpenModal(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error adding student: ", error);
+      setError("Failed to add student");
+      setOpenSnackbar(true);
+    }
+  };
+
+  const removeFromQueue = async (ubitToRemove) => {
+    try {
+      const docRef = doc(collection(firestore, "students"), ubitToRemove);
+      await deleteDoc(docRef);
+      await updateQueue();
+    } catch (error) {
+      console.error("Error removing from queue: ", error);
+      setError("Failed to remove from queue");
+      setOpenSnackbar(true);
+    }
+  };
+
+  const removeFromQuestions = async (ubitToRemove) => {
+    try {
+      const docRef = doc(collection(firestore, "questions"), ubitToRemove);
+      await deleteDoc(docRef);
+      await updateQueue();
+    } catch (error) {
+      console.error("Error removing from questions: ", error);
+      setError("Failed to remove from questions");
+      setOpenSnackbar(true);
+    }
+  };
+
+  const resetForm = () => {
+    setName("");
+    setUbit("");
+    setCategory("");
+    setQuestion("");
   };
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
       <Typography variant="h4">Queue Manager</Typography>
 
-      {/* Button to open modal */}
       <Button variant="contained" onClick={() => setOpenModal(true)}>
-        Enqueue
+        Add to Queue
       </Button>
-      <Button variant="contained" onClick={dequeueItem}>Dequeue</Button>
+      <Button variant="contained" onClick={() => setOpenModal2(true)}>
+        Add to Public Forum
+      </Button>
 
-      {/* Modal for entering name, UBIT, category, and question */}
       <Modal
         open={openModal}
         onClose={() => setOpenModal(false)}
@@ -57,19 +193,21 @@ export default function QueueManager() {
       >
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'white',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
             padding: 3,
             borderRadius: 2,
             boxShadow: 24,
             width: 400,
           }}
         >
-          <Typography variant="h6" mb={2}>Enter Details</Typography>
-          
+          <Typography variant="h6" mb={2}>
+            Enter Details
+          </Typography>
+
           <TextField
             label="Name"
             value={name}
@@ -94,26 +232,85 @@ export default function QueueManager() {
               onChange={(e) => setCategory(e.target.value)}
               label="Categorization"
             >
-              <MenuItem value="Technical Difficulties">Technical Difficulties</MenuItem>
+              <MenuItem value="Technical Difficulties">
+                Technical Difficulties
+              </MenuItem>
               <MenuItem value="Debugging">Debugging</MenuItem>
-              <MenuItem value="Conceptual Understanding">Conceptual Understanding</MenuItem>
+              <MenuItem value="Conceptual Understanding">
+                Conceptual Understanding
+              </MenuItem>
             </Select>
           </FormControl>
 
-          {/* Question Box */}
           <TextField
             label="Question"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             fullWidth
             multiline
-            rows={4}  // Adjust this based on how large you want the question box
+            rows={4}
             margin="normal"
           />
 
           <Stack direction="row" spacing={2} mt={2}>
-            <Button variant="contained" onClick={enqueueItem}>Add to Queue</Button>
-            <Button variant="outlined" onClick={() => setOpenModal(false)}>Cancel</Button>
+            <Button variant="contained" onClick={addToQueue}>
+              Add to Queue
+            </Button>
+            <Button variant="outlined" onClick={() => setOpenModal(false)}>
+              Cancel
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openModal2}
+        onClose={() => setOpenModal2(false)}
+        aria-labelledby="enqueue-modal"
+        aria-describedby="modal-for-entering-name-ubit-category"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            padding: 3,
+            borderRadius: 2,
+            boxShadow: 24,
+            width: 400,
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Enter Details
+          </Typography>
+
+          <TextField
+            label="Name"
+            value={ubit}
+            onChange={(e) => setUbit(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="Post"
+            value={post}
+            onChange={(e) => setPost(e.target.value)}
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
+          />
+
+          <Stack direction="row" spacing={2} mt={2}>
+            <Button variant="contained" onClick={addToQuestions}>
+              Add to Public Forum
+            </Button>
+            <Button variant="outlined" onClick={() => setOpenModal2(false)}>
+              Cancel
+            </Button>
           </Stack>
         </Box>
       </Modal>
@@ -121,13 +318,23 @@ export default function QueueManager() {
       <Box width="300px" mt={3} p={2} border="1px solid #333">
         <Typography variant="h6">Queue:</Typography>
         <Stack spacing={1}>
-          {queue.length > 0 ? (
-            queue.map((item, index) => (
-                <Box key={index} p={1} bgcolor="#f0f0f0" borderRadius={1}>
-                {/* Stack for each row */}
+          {loading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              p={2}
+            >
+              <CircularProgress />
+            </Box>
+          ) : queue.length > 0 ? (
+            queue.map((item) => (
+              <Box key={item.ubit} p={1} bgcolor="#f0f0f0" borderRadius={1}>
                 <Stack spacing={0.5}>
                   <Stack direction="row" justifyContent="space-between">
-                    <Typography variant="body2"><strong>Name:</strong> {item.name}</Typography>
+                    <Typography variant="body2">
+                      <strong>UBIT:</strong> {item.ubit}
+                    </Typography>
                   </Stack>
                 </Stack>
               </Box>
@@ -138,7 +345,35 @@ export default function QueueManager() {
         </Stack>
       </Box>
 
-      {/* Snackbar for error messages */}
+      <Box width="300px" mt={3} p={2} border="1px solid #333">
+        <Typography variant="h6">Public Forum:</Typography>
+        <Stack spacing={1}>
+          {loading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              p={2}
+            >
+              <CircularProgress />
+            </Box>
+          ) : questions.length > 0 ? (
+            questions.map((item) => (
+              <Box key={item.post} p={1} bgcolor="#f0f0f0" borderRadius={1}>
+                <Stack spacing={0.5}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography variant="body2">
+                      <strong></strong> {item.post}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Box>
+            ))
+          ) : (
+            <Typography>No items in public forum</Typography>
+          )}
+        </Stack>
+      </Box>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
@@ -148,11 +383,3 @@ export default function QueueManager() {
     </Box>
   );
 }
-
-
-/*
-  const [name, setName] = useState('');
-  const [ubit, setUbit] = useState('');
-  const [category, setCategory] = useState('');
-  const [question, setQuestion] = useState('');
-  */
