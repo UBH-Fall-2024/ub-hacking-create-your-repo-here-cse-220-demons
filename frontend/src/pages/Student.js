@@ -65,31 +65,30 @@ export default function QueueManager() {
     console.log("Real-time data:", data);
   });
 
-  const updateQueue = () => { 
-    setLoading(true); 
-    try { 
-      const unsubscribe = onSnapshot( 
-        collection(firestore, "students"), 
-        (snapshot) => { 
-          const queueList = []; 
-          snapshot.forEach((doc) => { 
-            queueList.push({ id: doc.id, ...doc.data() }); 
-          }); 
-          queueList.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0)); 
-          setQueue(queueList); 
-          setLoading(false); 
-        } 
-      ); 
-  
-      return unsubscribe; 
-  
-    } catch (error) { 
-      console.error("Error updating queue: ", error); 
-      setError("Failed to update queue"); 
-      setOpenSnackbar(true); 
-      setLoading(false); 
-    } 
-  }; 
+  const updateQueue = () => {
+    setLoading(true);
+    try {
+      const unsubscribe = onSnapshot(
+        collection(firestore, "students"),
+        (snapshot) => {
+          const queueList = [];
+          snapshot.forEach((doc) => {
+            queueList.push({ id: doc.id, ...doc.data() });
+          });
+          queueList.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+          setQueue(queueList);
+          setLoading(false);
+        }
+      );
+
+      return unsubscribe;
+    } catch (error) {
+      console.error("Error updating queue: ", error);
+      setError("Failed to update queue");
+      setOpenSnackbar(true);
+      setLoading(false);
+    }
+  };
   const updateQuestions = () => {
     setLoading(true);
     try {
@@ -136,41 +135,41 @@ export default function QueueManager() {
     }
   };
 
-  const addToQueue = async () => { 
-    if (!name || !question || !category || !ubit) { 
-      setError("Please fill in all fields"); 
-      setOpenSnackbar(true); 
-      return; 
-    } 
-  
-    try { 
-      const standardizedUbit = ubit; 
-      const docRef = doc(collection(firestore, "students"), standardizedUbit); 
-      const docSnap = await getDoc(docRef); 
-  
-      if (docSnap.exists()) { 
-        setError("Student with this UBIT already exists"); 
-        setOpenSnackbar(true); 
-        return; 
-      } 
-  
-      await setDoc(docRef, { 
-        name, 
-        question, 
-        category, 
-        ubit: standardizedUbit, 
-        timestamp: Date.now(), 
-      }); 
-  
-      await updateQueue(); 
-      setOpenModal(false); 
-      resetForm(); 
-    } catch (error) { 
-      console.error("Error adding student: ", error); 
-      setError("Failed to add student"); 
-      setOpenSnackbar(true); 
-    } 
-  }; 
+  const addToQueue = async () => {
+    if (!name || !question || !category || !ubit) {
+      setError("Please fill in all fields");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    try {
+      const standardizedUbit = ubit;
+      const docRef = doc(collection(firestore, "students"), standardizedUbit);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setError("Student with this UBIT already exists");
+        setOpenSnackbar(true);
+        return;
+      }
+
+      await setDoc(docRef, {
+        name,
+        question,
+        category,
+        ubit: standardizedUbit,
+        timestamp: Date.now(),
+      });
+
+      await updateQueue();
+      setOpenModal(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error adding student: ", error);
+      setError("Failed to add student");
+      setOpenSnackbar(true);
+    }
+  };
 
   const removeFromQueue = async (ubitToRemove) => {
     try {
@@ -349,7 +348,7 @@ export default function QueueManager() {
             </Stack>
           </Box>
         </Modal>
-        <Box display="flex" flexDirection="row" gap={4} sx={{ mt: 5, mb: 3 }}>
+        <Box display="flex" flexDirection="row" gap={4}>
           {/* Queue Box */}
           <Box
             width="300px"
@@ -357,7 +356,7 @@ export default function QueueManager() {
           >
             <Typography
               variant="h6"
-              bgcolor="#899499"
+              bgcolor="#5986e5"
               borderRadius={1}
               sx={{ textAlign: "center", mb: 1 }}
             >
@@ -397,7 +396,6 @@ export default function QueueManager() {
           {/* Public Forum Box */}
           <Box
             width="300px"
-            mt={3}
             sx={{ borderRadius: 3, p: 2, border: "1px solid #333" }}
           >
             <Typography
@@ -414,7 +412,7 @@ export default function QueueManager() {
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
-                  p={2}
+                  p={3}
                 >
                   <CircularProgress />
                 </Box>
