@@ -111,7 +111,7 @@ const Login = () => {
               font
               style={{ color: "grey" }}
             >
-              Sign Up{" "}
+              Register{" "}
             </Typography>
             <FormControl
               sx={{ width: "55%", height: "25%", m: 0 }}
