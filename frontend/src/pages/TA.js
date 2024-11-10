@@ -236,7 +236,7 @@ export default function QueueManager() {
               borderRadius={1}
               sx={{ textAlign: "center", mb: 1 }}
             >
-              Queue:
+              Queue ({queue.length}):
             </Typography>
 
             {/* Scrollable List */}
@@ -299,7 +299,7 @@ export default function QueueManager() {
               borderRadius={1}
               sx={{ textAlign: "center", mb: 1 }}
             >
-              Public Forum:
+              Public Forum ({questions.length}):
             </Typography>
 
             <Box

@@ -346,81 +346,73 @@ export default function QueueManager() {
           </Box>
         </Modal>
         <Box display="flex" flexDirection="row" gap={4} sx={{ mt: 5, mb: 3 }}>
-          {/* Queue Box */}
-          <Box width="300px" p={2} border="1px solid #333">
-            <Typography
-              variant="h6"
-              bgcolor="#899499"
-              borderRadius={1}
-              sx={{ textAlign: "center", mb: 1 }}
-            >
-              Queue:
-            </Typography>
-            <Stack spacing={1}>
-              {loading ? (
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  p={2}
-                >
-                  <CircularProgress />
-                </Box>
-              ) : queue.length > 0 ? (
-                queue.map((item) => (
-                  <Box key={item.ubit} p={1} bgcolor="#f0f0f0" borderRadius={1}>
-                    <Stack spacing={0.5}>
-                      <Stack direction="row" justifyContent="space-between">
-                        <Typography variant="body2">
-                          <strong>UBIT:</strong> {item.ubit}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </Box>
-                ))
-              ) : (
-                <Typography textAlign="center">Empty Queue</Typography>
-              )}
+        
+        {/* Queue Box */}
+<Box width="300px" sx={{ borderRadius: 3, p: 2, border: "1px solid #333" }}>
+  <Typography
+    variant="h6"
+    bgcolor="#899499"
+    borderRadius={1}
+    sx={{ textAlign: "center", mb: 1 }}
+  >
+    Queue ({queue.length}):
+    </Typography>
+    <Stack spacing={1}>
+        {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" p={2}>
+            <CircularProgress />
+        </Box>
+        ) : queue.length > 0 ? (
+        queue.map((item) => (
+            <Box key={item.ubit} p={1} bgcolor="#f0f0f0" borderRadius={1}>
+            <Stack spacing={0.5}>
+                <Stack direction="row" justifyContent="space-between">
+                <Typography variant="body2">
+                    <strong>UBIT:</strong> {item.ubit}
+                </Typography>
+                </Stack>
             </Stack>
-          </Box>
+            </Box>
+        ))
+        ) : (
+        <Typography textAlign="center">Empty Queue</Typography>
+        )}
+    </Stack>
+    </Box>
 
-          {/* Public Forum Box */}
-          <Box width="300px" mt={3} p={2} border="1px solid #333">
-            <Typography
-              variant="h6"
-              bgcolor="#5986e5"
-              borderRadius={1}
-              sx={{ textAlign: "center", mb: 1 }}
-            >
-              Public Forum:
-            </Typography>
-            <Stack spacing={1}>
-              {loading ? (
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  p={2}
-                >
-                  <CircularProgress />
-                </Box>
-              ) : questions.length > 0 ? (
-                questions.map((item) => (
-                  <Box key={item.post} p={1} bgcolor="#f0f0f0" borderRadius={1}>
-                    <Stack spacing={0.5}>
-                      <Stack direction="row" justifyContent="space-between">
-                        <Typography variant="body2">
-                          <strong></strong> {item.post}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </Box>
-                ))
-              ) : (
-                <Typography textAlign="center">No Questions</Typography>
-              )}
+    {/* Public Forum Box */}
+    <Box width="300px" mt={3} p={2} border="1px solid #333">
+    <Typography
+        variant="h6"
+        bgcolor="#5986e5"
+        borderRadius={1}
+        sx={{ textAlign: "center", mb: 1 }}
+    >
+        Public Forum ({questions.length}):
+    </Typography>
+    <Stack spacing={1}>
+        {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" p={2}>
+            <CircularProgress />
+        </Box>
+        ) : questions.length > 0 ? (
+        questions.map((item) => (
+            <Box key={item.post} p={1} bgcolor="#f0f0f0" borderRadius={1}>
+            <Stack spacing={0.5}>
+                <Stack direction="row" justifyContent="space-between">
+                <Typography variant="body2">
+                    <strong></strong> {item.post}
+                </Typography>
+                </Stack>
             </Stack>
-          </Box>
+            </Box>
+        ))
+        ) : (
+        <Typography textAlign="center">No Questions</Typography>
+        )}
+    </Stack>
+    </Box>
+
         </Box>
       </Box>
     </Box>
