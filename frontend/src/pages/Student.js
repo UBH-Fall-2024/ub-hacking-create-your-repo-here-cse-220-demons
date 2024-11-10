@@ -23,6 +23,7 @@ import {
   query,
   getDocs,
   deleteDoc,
+  onSnapshot
 } from "firebase/firestore";
 import { CircularProgress } from "@mui/material";
 
@@ -44,43 +45,68 @@ export default function QueueManager() {
 
   // Fetch queue data on component mount
   useEffect(() => {
-    updateQueue();
-    updateQuestions();
-  }, []);
+    const unsubscribeQueue = updateQueue();
+    const unsubscribeQuestions = updateQuestions();
 
-  const updateQueue = async () => {
+    return () => {
+      if (unsubscribeQueue) unsubscribeQueue();
+      if (unsubscribeQuestions) unsubscribeQuestions();
+    };
+  }, []);
+  const collectionRef = collection(firestore, "students");
+
+  onSnapshot(collectionRef, (snapshot) => {
+    const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    console.log("Real-time data:", data);
+  });
+
+  const collectionRef2 = collection(firestore, "questions");
+  onSnapshot(collectionRef2, (snapshot) => {
+    const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    console.log("Real-time data:", data);
+  });
+
+  const updateQueue = () => {
     setLoading(true);
     try {
-      const snapshot = query(collection(firestore, "students"));
-      const docs = await getDocs(snapshot);
-      const queueList = [];
-      docs.forEach((doc) => {
-        queueList.push({ id: doc.id, ...doc.data() });
-      });
-      setQueue(queueList);
+      const unsubscribe = onSnapshot(
+        collection(firestore, "students"),
+        (snapshot) => {
+          const queueList = [];
+          snapshot.forEach((doc) => {
+            queueList.push({ id: doc.id, ...doc.data() });
+          });
+          setQueue(queueList);
+          setLoading(false);
+        }
+      );
+      return unsubscribe; // Return the unsubscribe function
     } catch (error) {
       console.error("Error updating queue: ", error);
       setError("Failed to update queue");
       setOpenSnackbar(true);
-    } finally {
       setLoading(false);
     }
   };
-  const updateQuestions = async () => {
+  const updateQuestions = () => {
     setLoading(true);
     try {
-      const snapshot = query(collection(firestore, "questions"));
-      const docs = await getDocs(snapshot);
-      const questionsList = [];
-      docs.forEach((doc) => {
-        questionsList.push({ id: doc.id, ...doc.data() });
-      });
-      setQuestions(questionsList);
+      const unsubscribe = onSnapshot(
+        collection(firestore, "questions"),
+        (snapshot) => {
+          const questionsList = [];
+          snapshot.forEach((doc) => {
+            questionsList.push({ id: doc.id, ...doc.data() });
+          });
+          setQuestions(questionsList);
+          setLoading(false);
+        }
+      );
+      return unsubscribe; // Return the unsubscribe function
     } catch (error) {
       console.error("Error updating questions: ", error);
       setError("Failed to update questions");
       setOpenSnackbar(true);
-    } finally {
       setLoading(false);
     }
   };
