@@ -248,41 +248,44 @@ export default function QueueManager() {
               }}
             >
               <Stack spacing={1}>
-                {queue.length > 0 ? (
-                  queue.map((item) => (
-                    <Box
-                      key={item.ubit}
-                      p={1}
-                      bgcolor="#f0f0f0"
-                      borderRadius={1}
-                    >
-                      <Stack spacing={0.5}>
-                        <Stack direction="row" justifyContent="space-between">
-                          <Typography variant="body2">
-                            <strong>Name:</strong> {item.name}
-                          </Typography>
-                        </Stack>
+              {queue.length > 0 ? (
+  queue.map((item, index) => (
+    <Box
+      key={item.ubit}
+      p={1}
+      bgcolor="#f0f0f0"
+      borderRadius={1}
+    >
+      <Stack spacing={0.5}>
+        <Stack direction="row" justifyContent="space-between">
+          <Typography variant="body2">
+            <strong>Position:</strong> {index + 1} {/* Position in the queue */}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Name:</strong> {item.name}
+          </Typography>
+        </Stack>
+        <Typography variant="body2">
+          <strong>Ubit:</strong> {item.ubit}
+        </Typography>
+        <Typography variant="body2">
+          <strong>Question:</strong> {item.question}
+        </Typography>
+        <Button
+          variant="outlined"
+          color="error"
+          size="small"
+          onClick={() => removeFromQueue(item.ubit)}
+        >
+          Remove
+        </Button>
+      </Stack>
+    </Box>
+  ))
+) : (
+  <Typography textAlign="center">Empty Queue</Typography>
+)}
 
-                        <Typography variant="body2">
-                          <strong>Ubit:</strong> {item.ubit}
-                        </Typography>
-                        <Typography variant="body2">
-                          <strong>Question:</strong> {item.question}
-                        </Typography>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          size="small"
-                          onClick={() => removeFromQueue(item.ubit)}
-                        >
-                          Remove
-                        </Button>
-                      </Stack>
-                    </Box>
-                  ))
-                ) : (
-                  <Typography textAlign="center">Empty Queue</Typography>
-                )}
               </Stack>
             </Box>
           </Box>

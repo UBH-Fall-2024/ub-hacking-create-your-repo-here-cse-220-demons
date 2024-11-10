@@ -363,17 +363,21 @@ export default function QueueManager() {
             <CircularProgress />
         </Box>
         ) : queue.length > 0 ? (
-        queue.map((item) => (
-            <Box key={item.ubit} p={1} bgcolor="#f0f0f0" borderRadius={1}>
-            <Stack spacing={0.5}>
-                <Stack direction="row" justifyContent="space-between">
-                <Typography variant="body2">
-                    <strong>UBIT:</strong> {item.ubit}
-                </Typography>
-                </Stack>
-            </Stack>
-            </Box>
-        ))
+            queue.map((item, index) => (
+                <Box key={item.ubit} p={1} bgcolor="#f0f0f0" borderRadius={1}>
+                  <Stack spacing={0.5}>
+                    <Stack direction="row" justifyContent="space-between">
+                      <Typography variant="body2">
+                        <strong>Position:</strong> {index + 1}
+                      </Typography>
+                      <Typography variant="body2">
+                        <strong>UBIT:</strong> {item.ubit}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </Box>
+              ))
+              
         ) : (
         <Typography textAlign="center">Empty Queue</Typography>
         )}
@@ -381,7 +385,7 @@ export default function QueueManager() {
     </Box>
 
     {/* Public Forum Box */}
-    <Box width="300px" mt={3} p={2} border="1px solid #333">
+    <Box width="300px" mt={3} sx={{ borderRadius: 3, p: 2, border: "1px solid #333" }}>
     <Typography
         variant="h6"
         bgcolor="#5986e5"
