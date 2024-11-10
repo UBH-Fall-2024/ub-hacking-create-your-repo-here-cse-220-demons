@@ -16,7 +16,7 @@ export default function ButtonAppBar() {
           <Typography
             align="center"
             variant="h6"
-           fontWeight= 'bold'
+            fontWeight="bold"
             component="div"
             sx={{ flexGrow: 1 }}
           >
