@@ -342,7 +342,7 @@ export default function QueueManager() {
       </Modal>
 
       <Box width="300px" mt={3} p={2} border="1px solid #333">
-        <Typography variant="h6">Queue:</Typography>
+        <Typography variant="h6" bgcolor='#899499' borderRadius={1} sx={{ textAlign: "center", mb: 1 }}>Queue:</Typography>
         <Stack spacing={1}>
           {loading ? (
             <Box
@@ -366,13 +366,13 @@ export default function QueueManager() {
               </Box>
             ))
           ) : (
-            <Typography>No items in queue</Typography>
+            <Typography textAlign= 'center'>Empty Queue</Typography>
           )}
         </Stack>
       </Box>
 
       <Box width="300px" mt={3} p={2} border="1px solid #333">
-        <Typography variant="h6">Public Forum:</Typography>
+        <Typography variant="h6" bgcolor='#5986e5' borderRadius={1} sx={{ textAlign: "center", mb: 1 }}>Public Forum:</Typography>
         <Stack spacing={1}>
           {loading ? (
             <Box
@@ -396,7 +396,7 @@ export default function QueueManager() {
               </Box>
             ))
           ) : (
-            <Typography>No items in public forum</Typography>
+            <Typography textAlign= 'center' >No Questions</Typography>
           )}
         </Stack>
       </Box>
