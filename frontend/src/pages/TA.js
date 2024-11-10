@@ -307,7 +307,7 @@ export default function QueueManager() {
               sx={{
                 height: "250px",
                 overflowY: "auto",
-                paddingRight: 1,
+                paddingRight: 1.0,
               }}
             >
               <Stack spacing={1}>
@@ -356,19 +356,19 @@ export default function QueueManager() {
             <Typography
               bgcolor="#89CFF0"
               variant="h6"
-              mb={1}
+              mb={0.0}
               sx={{
                 textAlign: "center",
                 border: "1px solid #333",
-                borderRadius: 2,
-                p: 0.5,
+                borderRadius: 2.0,
+                p: 0.0,
               }}
             >
               Technical Difficulties (
               {getItemsByCategory("Technical Difficulties").length})
             </Typography>
             <Box
-              height="200px"
+              height="190px"
               sx={{
                 border: "1px solid #333",
                 borderRadius: 2,
@@ -404,18 +404,18 @@ export default function QueueManager() {
             <Typography
               variant="h6"
               bgcolor="#FFDBBB"
-              mb={1}
+              mb={0.0}
               sx={{
                 textAlign: "center",
                 border: "1px solid #333",
                 borderRadius: 2,
-                p: 0.5,
+                p: 0.0,
               }}
             >
               Debugging ({getItemsByCategory("Debugging").length})
             </Typography>
             <Box
-              height="200px"
+              height="190px"
               sx={{
                 border: "1px solid #333",
                 borderRadius: 2,
@@ -449,19 +449,19 @@ export default function QueueManager() {
             <Typography
               variant="h6"
               bgcolor="#64e3a1"
-              mb={1}
+              mb={0.0}
               sx={{
                 textAlign: "center",
                 border: "1px solid #333",
-                borderRadius: 2,
-                p: 0.5,
+                borderRadius: 2.0,
+                p: 0.0,
               }}
             >
               Conceptual Understanding (
               {getItemsByCategory("Conceptual Understanding").length})
             </Typography>
             <Box
-              height="200px"
+              height="190px"
               sx={{
                 border: "1px solid #333",
                 borderRadius: 1,
