@@ -10,6 +10,7 @@ import {
   Select,
   InputLabel,
   FormControl,
+  AppBar,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { firestore } from "../Firebase";
@@ -25,6 +26,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { CircularProgress } from "@mui/material";
+import ButtonAppBar from "./AppBar";
 
 export default function QueueManager() {
   const [queue, setQueue] = useState([]);
@@ -40,7 +42,7 @@ export default function QueueManager() {
   const [name, setName] = useState("");
   const [ubit, setUbit] = useState("");
   const [category, setCategory] = useState("");
-  const [question, setQuestion] = useState(""); // State for the question input
+  const [question, setQuestion] = useState("");
 
   useEffect(() => {
     const unsubscribeQueue = updateQueue();
@@ -79,7 +81,7 @@ export default function QueueManager() {
           setLoading(false);
         }
       );
-      return unsubscribe; // Return the unsubscribe function
+      return unsubscribe;
     } catch (error) {
       console.error("Error updating queue: ", error);
       setError("Failed to update queue");
@@ -101,7 +103,7 @@ export default function QueueManager() {
           setLoading(false);
         }
       );
-      return unsubscribe; // Return the unsubscribe function
+      return unsubscribe;
     } catch (error) {
       console.error("Error updating questions: ", error);
       setError("Failed to update questions");
@@ -205,177 +207,223 @@ export default function QueueManager() {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      alignItems="flex-start"
-      gap={4}
-      sx={{ pb: 29, mt: 5 }}
-    >
+    <Box display="flex" flexDirection="column" sx={{ pb: 29 }}>
+      <ButtonAppBar />
+
       <Box
         display="flex"
-        flexDirection="column"
-        alignItems="center"
-        gap={2}
-        flex={1}
+        flexDirection="row"
+        alignItems="flex-start"
+        gap={4}
+        sx={{ mt: 5, px: 4 }}
       >
-        <Typography variant="h4">CSE 220 Queue Manager</Typography>
-
         <Box
-          width="400px"
-          mt={3}
-          sx={{ borderRadius: 3, p: 2, border: "1px solid #333" }}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          gap={2}
+          flex={1}
         >
-          {/* Fixed Title */}
-          <Typography
-            variant="h6"
-            bgcolor="#899499"
-            borderRadius={1}
-            sx={{ textAlign: "center", mb: 1 }}
-          >
-            Queue:
-          </Typography>
-
-          {/* Scrollable List */}
           <Box
-            sx={{
-              height: "250px", // Adjust height as needed
-              overflowY: "auto",
-              paddingRight: 1, // Optional: add padding for scrollbar spacing
-            }}
+            width="400px"
+            mt={3}
+            sx={{ borderRadius: 3, p: 2, border: "1px solid #333" }}
           >
-            <Stack spacing={1}>
-              {queue.length > 0 ? (
-                queue.map((item) => (
-                  <Box key={item.ubit} p={1} bgcolor="#f0f0f0" borderRadius={1}>
-                    <Stack spacing={0.5}>
-                      <Stack direction="row" justifyContent="space-between">
+            {/* Fixed Title */}
+            <Typography
+              variant="h6"
+              bgcolor="#899499"
+              borderRadius={1}
+              sx={{ textAlign: "center", mb: 1 }}
+            >
+              Queue:
+            </Typography>
+
+            {/* Scrollable List */}
+            <Box
+              sx={{
+                height: "250px",
+                overflowY: "auto",
+                paddingRight: 1,
+              }}
+            >
+              <Stack spacing={1}>
+                {queue.length > 0 ? (
+                  queue.map((item) => (
+                    <Box
+                      key={item.ubit}
+                      p={1}
+                      bgcolor="#f0f0f0"
+                      borderRadius={1}
+                    >
+                      <Stack spacing={0.5}>
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography variant="body2">
+                            <strong>Name:</strong> {item.name}
+                          </Typography>
+                        </Stack>
+
                         <Typography variant="body2">
-                          <strong>Name:</strong> {item.name}
+                          <strong>Ubit:</strong> {item.ubit}
                         </Typography>
-                      </Stack>
-
-                      <Typography variant="body2">
-                        <strong>Ubit:</strong> {item.ubit}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Question:</strong> {item.question}
-                      </Typography>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        size="small"
-                        onClick={() => removeFromQueue(item.ubit)}
-                      >
-                        Remove
-                      </Button>
-                    </Stack>
-                  </Box>
-                ))
-              ) : (
-                <Typography textAlign="center">Empty Queue</Typography>
-              )}
-            </Stack>
-          </Box>
-        </Box>
-
-        {/* FOR YOU TO EDIT FORUM */}
-        <Box
-          width="400px"
-          mt={3}
-          sx={{ borderRadius: 3, p: 2, border: "1px solid #333" }}
-        >
-          {/* Fixed Title */}
-          <Typography
-            variant="h6"
-            bgcolor="#899499"
-            borderRadius={1}
-            sx={{ textAlign: "center", mb: 1 }}
-          >
-            Public Forum:
-          </Typography>
-
-          {/* Scrollable List */}
-          <Box
-            sx={{
-              height: "250px", // Adjust height as needed
-              overflowY: "auto",
-              paddingRight: 1, // Optional: add padding for scrollbar spacing
-            }}
-          >
-            <Stack spacing={1}>
-              {questions.length > 0 ? (
-                questions.map((item, index) => (
-                  <Box key={index} p={1} bgcolor="#f0f0f0" borderRadius={1}>
-                    {/* Stack for each row */}
-                    <Stack spacing={0.5}>
-                      <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                      ></Stack>
-
-                      <Stack direction="row" justifyContent="space-between">
                         <Typography variant="body2">
-                          <strong></strong> {item.post}
+                          <strong>Question:</strong> {item.question}
                         </Typography>
                         <Button
                           variant="outlined"
                           color="error"
                           size="small"
-                          onClick={() => removeFromQuestions(item.id)}
+                          onClick={() => removeFromQueue(item.ubit)}
                         >
                           Remove
                         </Button>
                       </Stack>
-                    </Stack>
-                  </Box>
-                ))
-              ) : (
-                <Typography textAlign="center">Empty Queue</Typography>
-              )}
-            </Stack>
+                    </Box>
+                  ))
+                ) : (
+                  <Typography textAlign="center">Empty Queue</Typography>
+                )}
+              </Stack>
+            </Box>
+          </Box>
+
+          {/* Forum Section */}
+          <Box
+            width="400px"
+            mt={3}
+            sx={{ borderRadius: 3, p: 2, border: "1px solid #333" }}
+          >
+            <Typography
+              variant="h6"
+              bgcolor="#899499"
+              borderRadius={1}
+              sx={{ textAlign: "center", mb: 1 }}
+            >
+              Public Forum:
+            </Typography>
+
+            <Box
+              sx={{
+                height: "250px",
+                overflowY: "auto",
+                paddingRight: 1,
+              }}
+            >
+              <Stack spacing={1}>
+                {questions.length > 0 ? (
+                  questions.map((item, index) => (
+                    <Box key={index} p={1} bgcolor="#f0f0f0" borderRadius={1}>
+                      <Stack spacing={0.5}>
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography variant="body2">
+                            <strong>UBIT:</strong> {item.ubit}
+                          </Typography>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            size="small"
+                            onClick={() => removeFromQuestions(item.id)}
+                          >
+                            Remove
+                          </Button>
+                        </Stack>
+                        <Typography variant="body2">
+                          <strong>Question:</strong> {item.post}
+                        </Typography>
+                      </Stack>
+                    </Box>
+                  ))
+                ) : (
+                  <Typography textAlign="center">Empty Queue</Typography>
+                )}
+              </Stack>
+            </Box>
           </Box>
         </Box>
-      </Box>
 
-      {/* Category-wise Queue Display */}
-      <Box
-        display="flex"
-        width="400px"
-        height="600px"
-        flexDirection="column"
-        gap={3}
-        flex={1}
-        sx={{ mt: 6, mr: 10 }}
-      >
-        {/* Technical Difficulties */}
-        <Box>
-          <Typography
-            bgcolor="#89CFF0"
-            variant="h6"
-            mb={1}
-            sx={{
-              textAlign: "center",
-              border: "1px solid #333",
-              borderRadius: 2,
-              p: 0.5,
-            }}
-          >
-            Technical Difficulties (
-            {getItemsByCategory("Technical Difficulties").length})
-          </Typography>
-          <Box
-            height="200px"
-            sx={{
-              border: "1px solid #333",
-              borderRadius: 2,
-              overflowY: "auto",
-            }}
-          >
-            <Stack spacing={1}>
-              {getItemsByCategory("Technical Difficulties").length > 0 ? (
-                getItemsByCategory("Technical Difficulties").map(
-                  (item, index) => (
+        {/* Category-wise Queue Display */}
+        <Box
+          display="flex"
+          width="400px"
+          height="600px"
+          flexDirection="column"
+          gap={3}
+          flex={1}
+        >
+          {/* Technical Difficulties */}
+          <Box>
+            <Typography
+              bgcolor="#89CFF0"
+              variant="h6"
+              mb={1}
+              sx={{
+                textAlign: "center",
+                border: "1px solid #333",
+                borderRadius: 2,
+                p: 0.5,
+              }}
+            >
+              Technical Difficulties (
+              {getItemsByCategory("Technical Difficulties").length})
+            </Typography>
+            <Box
+              height="200px"
+              sx={{
+                border: "1px solid #333",
+                borderRadius: 2,
+                overflowY: "auto",
+              }}
+            >
+              <Stack spacing={1}>
+                {getItemsByCategory("Technical Difficulties").length > 0 ? (
+                  getItemsByCategory("Technical Difficulties").map(
+                    (item, index) => (
+                      <Box key={index} p={1} bgcolor="#f0f0f0" borderRadius={1}>
+                        <Typography variant="body2">
+                          <strong>Name:</strong> {item.name}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>UBIT:</strong> {item.ubit}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>Question:</strong> {item.question}
+                        </Typography>
+                      </Box>
+                    )
+                  )
+                ) : (
+                  <Typography align="center">Empty Queue</Typography>
+                )}
+              </Stack>
+            </Box>
+          </Box>
+
+          {/* Debugging */}
+          <Box>
+            <Typography
+              variant="h6"
+              bgcolor="#FFDBBB"
+              mb={1}
+              sx={{
+                textAlign: "center",
+                border: "1px solid #333",
+                borderRadius: 2,
+                p: 0.5,
+              }}
+            >
+              Debugging ({getItemsByCategory("Debugging").length})
+            </Typography>
+            <Box
+              height="200px"
+              sx={{
+                border: "1px solid #333",
+                borderRadius: 2,
+                overflowY: "auto",
+              }}
+            >
+              <Stack spacing={1}>
+                {getItemsByCategory("Debugging").length > 0 ? (
+                  getItemsByCategory("Debugging").map((item, index) => (
                     <Box key={index} p={1} bgcolor="#f0f0f0" borderRadius={1}>
                       <Typography variant="body2">
                         <strong>Name:</strong> {item.name}
@@ -387,116 +435,71 @@ export default function QueueManager() {
                         <strong>Question:</strong> {item.question}
                       </Typography>
                     </Box>
+                  ))
+                ) : (
+                  <Typography align="center">Empty Queue</Typography>
+                )}
+              </Stack>
+            </Box>
+          </Box>
+
+          {/* Conceptual Understanding */}
+          <Box>
+            <Typography
+              variant="h6"
+              bgcolor="#64e3a1"
+              mb={1}
+              sx={{
+                textAlign: "center",
+                border: "1px solid #333",
+                borderRadius: 2,
+                p: 0.5,
+              }}
+            >
+              Conceptual Understanding (
+              {getItemsByCategory("Conceptual Understanding").length})
+            </Typography>
+            <Box
+              height="200px"
+              sx={{
+                border: "1px solid #333",
+                borderRadius: 1,
+                overflowY: "auto",
+              }}
+            >
+              <Stack spacing={1}>
+                {getItemsByCategory("Conceptual Understanding").length > 0 ? (
+                  getItemsByCategory("Conceptual Understanding").map(
+                    (item, index) => (
+                      <Box key={index} p={1} bgcolor="#f0f0f0" borderRadius={1}>
+                        <Typography variant="body2">
+                          <strong>Name:</strong> {item.name}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>UBIT:</strong> {item.ubit}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>Question:</strong> {item.question}
+                        </Typography>
+                      </Box>
+                    )
                   )
-                )
-              ) : (
-                <Typography align="center">Empty Queue</Typography>
-              )}
-            </Stack>
+                ) : (
+                  <Typography align="center">Empty Queue</Typography>
+                )}
+              </Stack>
+            </Box>
           </Box>
         </Box>
 
-        {/* Debugging */}
-        <Box>
-          <Typography
-            variant="h6"
-            bgcolor="#FFDBBB"
-            mb={1}
-            sx={{
-              textAlign: "center",
-              border: "1px solid #333",
-              borderRadius: 2,
-              p: 0.5,
-            }}
-          >
-            Debugging ({getItemsByCategory("Debugging").length})
-          </Typography>
-          <Box
-            height="200px"
-            sx={{
-              border: "1px solid #333",
-              borderRadius: 2,
-              overflowY: "auto",
-            }}
-          >
-            <Stack spacing={1}>
-              {getItemsByCategory("Debugging").length > 0 ? (
-                getItemsByCategory("Debugging").map((item, index) => (
-                  <Box key={index} p={1} bgcolor="#f0f0f0" borderRadius={1}>
-                    <Typography variant="body2">
-                      <strong>Name:</strong> {item.name}
-                    </Typography>
-                    <Typography variant="body2">
-                      <strong>UBIT:</strong> {item.ubit}
-                    </Typography>
-                    <Typography variant="body2">
-                      <strong>Question:</strong> {item.question}
-                    </Typography>
-                  </Box>
-                ))
-              ) : (
-                <Typography align="center">Empty Queue</Typography>
-              )}
-            </Stack>
-          </Box>
-        </Box>
-
-        {/* Conceptual Understanding */}
-        <Box>
-          <Typography
-            variant="h6"
-            bgcolor="#64e3a1"
-            mb={1}
-            sx={{
-              textAlign: "center",
-              border: "1px solid #333",
-              borderRadius: 2,
-              p: 0.5,
-            }}
-          >
-            Conceptual Understanding (
-            {getItemsByCategory("Conceptual Understanding").length})
-          </Typography>
-          <Box
-            height="200px"
-            sx={{
-              border: "1px solid #333",
-              borderRadius: 1,
-              overflowY: "auto",
-            }}
-          >
-            <Stack spacing={1}>
-              {getItemsByCategory("Conceptual Understanding").length > 0 ? (
-                getItemsByCategory("Conceptual Understanding").map(
-                  (item, index) => (
-                    <Box key={index} p={1} bgcolor="#f0f0f0" borderRadius={1}>
-                      <Typography variant="body2">
-                        <strong>Name:</strong> {item.name}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>UBIT:</strong> {item.ubit}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Question:</strong> {item.question}
-                      </Typography>
-                    </Box>
-                  )
-                )
-              ) : (
-                <Typography align="center">Empty Queue</Typography>
-              )}
-            </Stack>
-          </Box>
-        </Box>
+        {/* Snackbar for error messages */}
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={() => setOpenSnackbar(false)}
+          message={error}
+        />
       </Box>
-
-      {/* Snackbar for error messages */}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbar(false)}
-        message={error}
-      />
     </Box>
   );
 }
