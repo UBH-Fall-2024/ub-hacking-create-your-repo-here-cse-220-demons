@@ -106,6 +106,14 @@ const Login = () => {
             flex={1}
           >
             <Typography
+              variant="h4"
+              fontWeight="bold"
+              font
+              style={{ color: "#007FFE" }}
+            >
+              Welcome to Wait-Less!{" "}
+            </Typography>
+            <Typography
               variant="h5"
               fontWeight="bold"
               font
@@ -167,7 +175,7 @@ const Login = () => {
               disabled={loading}
               onClick={handleSubmit}
             >
-              {loading ? "Signing In..." : "Sign In"}
+              {loading ? "Signing Up..." : "Sign Up"}
             </Button>
           </Box>
         </Box>

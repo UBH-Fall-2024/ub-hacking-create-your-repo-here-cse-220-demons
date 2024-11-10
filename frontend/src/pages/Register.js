@@ -31,10 +31,10 @@ const Register = () => {
   const user = "";
   const navigate = useNavigate();
 
-  const handleSignUp = async(e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     navigate("/login");
-  }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -48,7 +48,7 @@ const Register = () => {
       user = loginInformation.user;
       const document = doc(firestore, "users", user.uid);
       const userDocSnapshot = await getDoc(document);
-      if(!userDocSnapshot.exists() || !userDocSnapshot.data().role){
+      if (!userDocSnapshot.exists() || !userDocSnapshot.data().role) {
         return;
       }
       if (!role) {
@@ -73,9 +73,8 @@ const Register = () => {
       if (role == "Teaching Assistant" && user) {
         navigate("/ta");
       }
-      }
     }
-  
+  };
 
   return (
     <Box
@@ -115,6 +114,14 @@ const Register = () => {
             gap={2}
             flex={1}
           >
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              font
+              style={{ color: "#007FFE" }}
+            >
+              Welcome to Wait-Less!{" "}
+            </Typography>
             <Typography
               variant="h5"
               fontWeight="bold"

@@ -20,7 +20,7 @@ export default function StudentAppBar() {
             component="div"
             sx={{ flexGrow: 1 }}
           >
-            Student Assistant Portal
+            Student Portal
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
