@@ -289,7 +289,7 @@ export default function QueueManager() {
                     </Box>
                   ))
                 ) : (
-                  <Typography textAlign="center">Empty Queue</Typography>
+                  <Typography textAlign="center">No Questions Yet!</Typography>
                 )}
               </Stack>
             </Box>
@@ -342,7 +342,7 @@ export default function QueueManager() {
                     </Box>
                   ))
                 ) : (
-                  <Typography textAlign="center">Empty Queue</Typography>
+                  <Typography textAlign="center">No Questions Yet!</Typography>
                 )}
               </Stack>
             </Box>
@@ -400,7 +400,7 @@ export default function QueueManager() {
                     )
                   )
                 ) : (
-                  <Typography align="center">Empty Queue</Typography>
+                  <Typography align="center">No Questions Yet!</Typography>
                 )}
               </Stack>
             </Box>
@@ -445,7 +445,7 @@ export default function QueueManager() {
                     </Box>
                   ))
                 ) : (
-                  <Typography align="center">Empty Queue</Typography>
+                  <Typography align="center">No Questions Yet!</Typography>
                 )}
               </Stack>
             </Box>
@@ -493,7 +493,7 @@ export default function QueueManager() {
                     )
                   )
                 ) : (
-                  <Typography align="center">Empty Queue</Typography>
+                  <Typography align="center">No Questions Yet!</Typography>
                 )}
               </Stack>
             </Box>

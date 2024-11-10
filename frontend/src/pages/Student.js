@@ -385,7 +385,7 @@ export default function QueueManager() {
                   </Box>
                 ))
               ) : (
-                <Typography textAlign="center">Empty Queue</Typography>
+                <Typography textAlign="center">First in line! Yay!</Typography>
               )}
             </Stack>
           </Box>
@@ -427,7 +427,7 @@ export default function QueueManager() {
                   </Box>
                 ))
               ) : (
-                <Typography textAlign="center">No Questions</Typography>
+                <Typography textAlign="center">No Questions Yet!</Typography>
               )}
             </Stack>
           </Box>
