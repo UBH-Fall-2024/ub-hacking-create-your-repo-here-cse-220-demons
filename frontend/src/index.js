@@ -9,11 +9,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />}>
-          <Route path="login" element={<Login />} />
-          <Route path="student" element={<Student />} />
-          <Route path="ta" element={<TA />} />
-        </Route>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/student" element={<Student />} />
+        <Route path="/ta" element={<TA />} />
       </Routes>
     </BrowserRouter>
   );
