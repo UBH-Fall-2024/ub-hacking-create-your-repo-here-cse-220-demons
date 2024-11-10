@@ -77,10 +77,12 @@ export default function QueueManager() {
           snapshot.forEach((doc) => {
             queueList.push({ id: doc.id, ...doc.data() });
           });
+          queueList.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
           setQueue(queueList);
           setLoading(false);
         }
       );
+
       return unsubscribe;
     } catch (error) {
       console.error("Error updating queue: ", error);
@@ -103,12 +105,11 @@ export default function QueueManager() {
           setLoading(false);
         }
       );
-      return unsubscribe;
+      return unsubscribe; 
     } catch (error) {
       console.error("Error updating questions: ", error);
       setError("Failed to update questions");
       setOpenSnackbar(true);
-      setLoading(false);
     }
   };
 
@@ -158,6 +159,7 @@ export default function QueueManager() {
         question,
         category,
         ubit: standardizedUbit,
+        timestamp: Date.now(),
       });
 
       await updateQueue();
