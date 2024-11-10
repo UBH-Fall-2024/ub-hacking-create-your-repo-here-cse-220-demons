@@ -15,8 +15,9 @@ When it's your turn, you'll get the full experience before being taken off the q
 ## Challenges we ran into
 As a group with limited experience in Node.js and Firebase, we had a lot of obstacles to overcome. We sought after more experienced developers, and leaned on each other for collaboration to break down complex topics. 
 ## Accomplishments we're proud of 
-We are mostly proud of the fact that we were able top connect the backend implementation to the frontend, which was the most time consuming part. Also, given the lack of experience in this text stack as a team, we are preoud of the fact that we were able to add everything to our liking and follow through with our initial expectations.
+We are mostly proud of the fact that we were able to connect the backend implementation to the frontend, which was the most time consuming part. Also, given the lack of experience in this text stack as a team, we are preoud of the fact that we were able to add everything to our liking and follow through with our initial expectations.
 ## What we learned
-We learn
+We learned how to implement in Node.js and Firebase, and learned to communicate with each other to limit all merge issues. 
+##
 
 
