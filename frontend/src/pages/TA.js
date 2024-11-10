@@ -250,40 +250,38 @@ export default function QueueManager() {
               <Stack spacing={1}>
               {queue.length > 0 ? (
   queue.map((item, index) => (
-    <Box
-      key={item.ubit}
-      p={1}
-      bgcolor="#f0f0f0"
-      borderRadius={1}
-    >
-      <Stack spacing={0.5}>
-        <Stack direction="row" justifyContent="space-between">
-          <Typography variant="body2">
-            <strong>Position:</strong> {index + 1} {/* Position in the queue */}
-          </Typography>
-          <Typography variant="body2">
-            <strong>Name:</strong> {item.name}
-          </Typography>
-        </Stack>
-        <Typography variant="body2">
-          <strong>Ubit:</strong> {item.ubit}
-        </Typography>
-        <Typography variant="body2">
-          <strong>Question:</strong> {item.question}
-        </Typography>
-        <Button
-          variant="outlined"
-          color="error"
-          size="small"
-          onClick={() => removeFromQueue(item.ubit)}
+    <Box 
+          key={item.ubit} 
+          p={1} 
+          borderRadius={1}
+          sx={{
+            bgcolor: item.category === "Debugging" 
+              ? "#FFDBBB" 
+              : item.category === "Technical Difficulties"
+              ? "#89CFF0"
+              : item.category === "Conceptual Understanding"
+              ? "#64e3a1"
+              : "#f0f0f0"
+          }}
         >
-          Remove
-        </Button>
-      </Stack>
-    </Box>
-  ))
-) : (
-  <Typography textAlign="center">Empty Queue</Typography>
+          <Stack spacing={0.5}>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2">
+                <strong>Position:</strong> {index + 1}
+              </Typography>
+              <Typography variant="body2">
+                <strong>UBIT:</strong> {item.ubit}
+              </Typography>
+            </Stack>
+            <Typography variant="body2">
+              <strong>Category:</strong> {item.category}
+            </Typography>
+          </Stack>
+        </Box>
+      ))
+    ) : (
+      <Typography textAlign="center">Empty Queue</Typography>
+   
 )}
 
               </Stack>
