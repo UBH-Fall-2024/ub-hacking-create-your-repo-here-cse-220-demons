@@ -248,42 +248,49 @@ export default function QueueManager() {
               }}
             >
               <Stack spacing={1}>
-              {queue.length > 0 ? (
-  queue.map((item, index) => (
-    <Box 
-          key={item.ubit} 
-          p={1} 
-          borderRadius={1}
-          sx={{
-            bgcolor: item.category === "Debugging" 
-              ? "#FFDBBB" 
-              : item.category === "Technical Difficulties"
-              ? "#89CFF0"
-              : item.category === "Conceptual Understanding"
-              ? "#64e3a1"
-              : "#f0f0f0"
-          }}
-        >
-          <Stack spacing={0.5}>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2">
-                <strong>Position:</strong> {index + 1}
-              </Typography>
-              <Typography variant="body2">
-                <strong>UBIT:</strong> {item.ubit}
-              </Typography>
-            </Stack>
-            <Typography variant="body2">
-              <strong>Category:</strong> {item.category}
-            </Typography>
-          </Stack>
-        </Box>
-      ))
-    ) : (
-      <Typography textAlign="center">Empty Queue</Typography>
-   
-)}
-
+                {queue.length > 0 ? (
+                  queue.map((item, index) => (
+                    <Box
+                      key={item.ubit}
+                      p={1}
+                      borderRadius={1}
+                      sx={{
+                        bgcolor:
+                          item.category === "Debugging"
+                            ? "#FFDBBB"
+                            : item.category === "Technical Difficulties"
+                            ? "#89CFF0"
+                            : item.category === "Conceptual Understanding"
+                            ? "#64e3a1"
+                            : "#f0f0f0",
+                      }}
+                    >
+                      <Stack spacing={0.5}>
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography variant="body2">
+                            <strong>Position:</strong> {index + 1}
+                          </Typography>
+                          <Typography variant="body2">
+                            <strong>UBIT:</strong> {item.ubit}
+                          </Typography>
+                        </Stack>
+                        <Typography variant="body2">
+                          <strong>Category:</strong> {item.category}
+                        </Typography>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          size="small"
+                          onClick={() => removeFromQueue(item.id)}
+                        >
+                          Remove
+                        </Button>
+                      </Stack>
+                    </Box>
+                  ))
+                ) : (
+                  <Typography textAlign="center">Empty Queue</Typography>
+                )}
               </Stack>
             </Box>
           </Box>
@@ -319,18 +326,18 @@ export default function QueueManager() {
                           <Typography variant="body2">
                             <strong>UBIT:</strong> {item.ubit}
                           </Typography>
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            size="small"
-                            onClick={() => removeFromQuestions(item.id)}
-                          >
-                            Remove
-                          </Button>
                         </Stack>
                         <Typography variant="body2">
                           <strong>Question:</strong> {item.post}
                         </Typography>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          size="small"
+                          onClick={() => removeFromQuestions(item.id)}
+                        >
+                          Remove
+                        </Button>
                       </Stack>
                     </Box>
                   ))
